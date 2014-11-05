@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+	<head>
+		 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<style type="text/css">
+			select{
+				width:130px;
+				float:right;
+			}
+			#controls{
+				width:300px;
+				float:left;
+			}
+			#results{
+				width:300px;
+				float:right;
+			}
+            #main{
+               position:absolute;
+               top:250px;
+            }
+		</style>
+	</head>
+	<body>
+		<div id="controls">
+			Attacker Strength: 
+			<select id="str" name="str">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</select><br/><br/>
+			Attacker Agility: 
+			<select id="agi" name="agi">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+			</select><br/><br/>	
+			Use Weapon:
+			<select id="weapon" name="weapon">
+				<option value="Dagger">Dagger</option>
+				<option value="Arming Sword">Arming Sword</option>
+				<option value="Morningstar">Morningstar</option>
+				<option value="Francisca">Francisca</option>
+			</select><br/><br/>
+			With:
+			<select id="hands" name="hands">
+				<option value="one">One Hand</option>
+				<option value="both">Both Hands</option>
+			</select><br/><br/>			
+			Against Armor:
+			<select id="armor" name="armor">
+				<option value="Padded Leather">Padded Leather</option>
+				<option value="Chainmail">Chainmail</option>
+				<option value="Platemail">Platemail</option>
+			</select><br/><br/>			
+			<button id="attack" value="attack" >Attack</button>
+		</div>
+		<div id="results"></div>
+		<div id="main"></div>
+		
+        <script src="main.js"></script>
+		<script src="dmgCalc.js"></script>
+	</body>
+</html>

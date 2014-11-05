@@ -1,0 +1,274 @@
+remstart
+
+This file is released under the terms of the MIT License:
+
+    Copyright (c) 2014 Josh Kirklin
+	
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	
+	http://opensource.org/licenses/MIT
+
+remend
+
+DamageCalculator_Init:
+
+	type weaponData
+		name                    as string
+		mass                    as integer
+		length                  as integer
+		control                 as integer
+		gripType                as string
+		twoHandedAllowed        as boolean
+		offHandAllowed          as boolean
+		parryAllowed            as boolean
+		primaryAttackType       as string
+		primaryDamageType       as string
+		primaryPenetrating      as boolean
+		primaryDestructive      as boolean
+		secondaryAttackType     as string
+		secondaryDamageType     as string
+		secondaryPenetrating    as boolean
+		secondaryDestructive    as boolean
+	endtype
+
+	type armorData
+		name                    as string
+		condition               as integer
+		absorption              as integer
+		slashingResistance      as float
+		slashingDurability      as float
+		piercingResistance      as float
+		piercingDurability      as float
+		crushingResistance      as float
+		crushingDurability      as float
+	endtype
+
+	type damageData
+		damage                  as integer
+		conDamage               as integer
+		recoveryTime            as integer
+		debugTxt                as string
+	endtype
+
+	GLOBAL damageResult as damageData
+
+
+
+	dim dmgCalc_Weapons() as weaponData
+
+	array insert at bottom dmgCalc_Weapons()
+	dmgCalc_Weapons().name = "Dagger"
+	dmgCalc_Weapons().mass = 1
+	dmgCalc_Weapons().length = 1
+	dmgCalc_Weapons().control = 5
+	dmgCalc_Weapons().gripType = "Hilted"
+	dmgCalc_Weapons().twoHandedAllowed = 1
+	dmgCalc_Weapons().offHandAllowed = 1
+	dmgCalc_Weapons().parryAllowed = 0
+	dmgCalc_Weapons().primaryAttackType = "Thrust"
+	dmgCalc_Weapons().primaryDamageType = "Piercing"
+	dmgCalc_Weapons().primaryPenetrating = 1
+	dmgCalc_Weapons().primaryDestructive = 0
+	dmgCalc_Weapons().secondaryAttackType = "Swing"
+	dmgCalc_Weapons().secondaryDamageType = "Slashing"
+	dmgCalc_Weapons().secondaryPenetrating = 0
+	dmgCalc_Weapons().secondaryDestructive = 0
+
+	array insert at bottom dmgCalc_Weapons()
+	dmgCalc_Weapons().name = "Arming Sword"
+	dmgCalc_Weapons().mass = 3
+	dmgCalc_Weapons().length = 3
+	dmgCalc_Weapons().control = 4
+	dmgCalc_Weapons().gripType = "Hilted"
+	dmgCalc_Weapons().twoHandedAllowed = 1
+	dmgCalc_Weapons().offHandAllowed = 1
+	dmgCalc_Weapons().parryAllowed = 1
+	dmgCalc_Weapons().primaryAttackType = "Swing"
+	dmgCalc_Weapons().primaryDamageType = "Slashing"
+	dmgCalc_Weapons().primaryPenetrating = 0
+	dmgCalc_Weapons().primaryDestructive = 0
+	dmgCalc_Weapons().secondaryAttackType = "Thrust"
+	dmgCalc_Weapons().secondaryDamageType = "Piercing"
+	dmgCalc_Weapons().secondaryPenetrating = 0
+	dmgCalc_Weapons().secondaryDestructive = 0
+
+	array insert at bottom dmgCalc_Weapons()
+	dmgCalc_Weapons().name = "Morningstar"
+	dmgCalc_Weapons().mass = 5
+	dmgCalc_Weapons().length = 3
+	dmgCalc_Weapons().control = 2
+	dmgCalc_Weapons().gripType = "Hafted"
+	dmgCalc_Weapons().twoHandedAllowed = 1
+	dmgCalc_Weapons().offHandAllowed = 0
+	dmgCalc_Weapons().parryAllowed = 1
+	dmgCalc_Weapons().primaryAttackType = "Swing"
+	dmgCalc_Weapons().primaryDamageType = "Piercing"
+	dmgCalc_Weapons().primaryPenetrating = 1
+	dmgCalc_Weapons().primaryDestructive = 0
+
+	array insert at bottom dmgCalc_Weapons()
+	dmgCalc_Weapons().name = "Francisca"
+	dmgCalc_Weapons().mass = 3
+	dmgCalc_Weapons().length = 4
+	dmgCalc_Weapons().control = 3
+	dmgCalc_Weapons().gripType = "Hafted"
+	dmgCalc_Weapons().twoHandedAllowed = 1
+	dmgCalc_Weapons().offHandAllowed = 0
+	dmgCalc_Weapons().parryAllowed = 1
+	dmgCalc_Weapons().primaryAttackType = "Swing"
+	dmgCalc_Weapons().primaryDamageType = "Slashing"
+	dmgCalc_Weapons().primaryPenetrating = 0
+	dmgCalc_Weapons().primaryDestructive = 1
+
+
+
+	dim dmgCalc_Armor() as armorData
+
+	array insert at bottom dmgCalc_Armor()
+	dmgCalc_Armor().name = "Padded Leather"
+	dmgCalc_Armor().condition = 100
+	dmgCalc_Armor().absorption = 50
+	dmgCalc_Armor().slashingResistance = 263.4
+	dmgCalc_Armor().slashingDurability = 35.0
+	dmgCalc_Armor().piercingResistance = 219.5
+	dmgCalc_Armor().piercingDurability = 50.0
+	dmgCalc_Armor().crushingResistance = 878.0
+	dmgCalc_Armor().crushingDurability = 85.0
+
+	array insert at bottom dmgCalc_Armor()
+	dmgCalc_Armor().name = "Chainmail"
+	dmgCalc_Armor().condition = 100
+	dmgCalc_Armor().absorption = 35
+	dmgCalc_Armor().slashingResistance = 439.0
+	dmgCalc_Armor().slashingDurability = 70.0
+	dmgCalc_Armor().piercingResistance = 263.4
+	dmgCalc_Armor().piercingDurability = 35.0
+	dmgCalc_Armor().crushingResistance = 702.4
+	dmgCalc_Armor().crushingDurability = 80.0
+
+	array insert at bottom dmgCalc_Armor()
+	dmgCalc_Armor().name = "Platemail"
+	dmgCalc_Armor().condition = 100
+	dmgCalc_Armor().absorption = 65
+	dmgCalc_Armor().slashingResistance = 597.04
+	dmgCalc_Armor().slashingDurability = 75.0
+	dmgCalc_Armor().piercingResistance = 544.36
+	dmgCalc_Armor().piercingDurability = 85.0
+	dmgCalc_Armor().crushingResistance = 526.8
+	dmgCalc_Armor().crushingDurability = 40.0
+
+return
+
+function dmgCalc_getAttackDamage(attacker as integer, defender as integer, usedTwoHands as boolean, attackMode as string)
+
+    `reset previous results
+    damageResult.damage = 0
+    damageResult.conDamage = 0
+    damageResult.recoveryTime = 0
+    damageResult.debugTxt = ""
+    txt$ = ""
+
+    `get relevant data involved in the attack
+    str = characters(attacker).str
+    agi = characters(attacker).agi
+    tWeapon = characters(attacker).weapon
+    tArmor = characters(defender).armor
+	
+    select attackMode
+        case "primary":
+            tAttackType$ = dmgCalc_Weapons(tWeapon).primaryAttackType
+            tDamageType$ = dmgCalc_Weapons(tWeapon).primaryDamageType
+            tPenetrating = dmgCalc_Weapons(tWeapon).primaryPenetrating
+            tDestructive = dmgCalc_Weapons(tWeapon).primaryDestructive
+        endcase
+        case "secondary":
+            tAttackType$ = dmgCalc_Weapons(tWeapon).secondaryAttackType
+            tDamageType$ = dmgCalc_Weapons(tWeapon).secondaryDamageType
+            tPenetrating = dmgCalc_Weapons(tWeapon).secondaryPenetrating
+            tDestructive = dmgCalc_Weapons(tWeapon).secondaryDestructive
+        endcase
+    endselect
+
+    select tDamageType$
+        case "Slashing":
+            tResistance# = dmgCalc_Armor(tArmor).slashingResistance
+            tDurability# = dmgCalc_Armor(tArmor).slashingDurability
+        endcase
+        case "Piercing":
+            tResistance# = dmgCalc_Armor(tArmor).piercingResistance
+            tDurability# = dmgCalc_Armor(tArmor).piercingDurability
+        endcase
+        case "Crushing":
+            tResistance# = dmgCalc_Armor(tArmor).crushingResistance
+            tDurability# = dmgCalc_Armor(tArmor).crushingDurability
+        endcase
+    endselect
+
+    recoveryTime = 1500 - (dmgCalc_Weapons(tWeapon).control * 250)
+
+    `calculate applied force
+    force# = 20.0 + (10.0 * dmgCalc_Weapons(tWeapon).mass)
+
+    force# = force# + (5.0 * dmgCalc_Weapons(tWeapon).length) - 15.0
+
+    if dmgCalc_Weapons(tWeapon).mass >= 3
+        force# = force# * str
+        force# = force# * (1.0 + (agi / 100.0))
+    else
+        force# = force# * agi
+        force# = force# * (1.0 + (str / 100.0))
+    endif
+
+    if dmgCalc_Weapons(tWeapon).mass < 5 and usedTwoHands = 1 then force# = force# * 1.25
+
+    if dmgCalc_Weapons(tWeapon).mass = 5 and usedTwoHands = 0
+        force# = force# / 2.0
+        recoveryTime = recoveryTime * 1.5
+    endif
+
+    if dmgCalc_Weapons(tWeapon).gripType = "Hilted" and tAttackType$ = "Thrust" and dmgCalc_Weapons(tWeapon).mass >= 3
+        force# = force# / 2.0
+        recoveryTime = recoveryTime * 1.5
+    endif
+
+    if dmgCalc_Weapons(tWeapon).gripType = "Hafted" and tAttackType$ = "Thrust" and usedTwoHands = 0 then force# = force# / 2.0
+
+    if tPenetrating = 1 then force# = force# * 1.25
+
+    txt$ = txt$ + "Applied Force: " + str$(force#)
+
+    `calculate resulting damage
+    effectiveness# = 100.0 - (100.0 - dmgCalc_Armor(tArmor).condition) * 2.0
+
+    appliedAbsorption# = 1.0 - (dmgCalc_Armor(tArmor).absorption / 100.0) * (effectiveness# / 100.0)
+
+    appliedResistance# = tResistance# * (effectiveness# / 100.0)
+
+    txt$ = txt$ + "Applied Resistance: " + str$(appliedResistance#)
+
+    if force# > appliedResistance#
+        appliedDurability# = 1.0 - (tDurability# / 100.0)
+        damage# = force# * (appliedAbsorption# * 2.0) * 0.1
+        conDamage# = force# * appliedDurability# * 1.5 / 10.0
+		txt$ = txt$ + "Applied Durability: " + str$(appliedDurability#)
+    else
+        appliedDurability# = 1.0 - ((tDurability# + dmgCalc_Armor(tArmor).crushingDurability) / 200.0)
+        damage# = (force# * appliedAbsorption#) * 0.1
+        conDamage# = force# * appliedDurability# / 10.0
+		txt$ = txt$ + "Applied Durability: " + str$(appliedDurability#)
+    endif
+
+    if tDestructive = 1 then conDamage# = conDamage# * 1.25
+
+    conDamage# = conDamage# / 2.0
+
+    damageResult.damage = damage# * 1
+    damageResult.conDamage = conDamage# * 1
+    damageResult.recoveryTime = recoveryTime
+    damageResult.debugTxt = txt$
+
+endfunction

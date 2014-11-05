@@ -1,0 +1,41 @@
+sync on
+
+type characterData
+    str                     as integer
+    agi                     as integer
+    recoveryTime            as integer
+    weapon                  as integer
+    health                  as integer
+    armor                   as integer
+endtype
+
+dim characters() as characterData
+
+array insert at bottom characters()
+attacker = 0
+characters(attacker).str = 7
+characters(attacker).agi = 5
+characters(attacker).recoveryTime = 0
+characters(attacker).weapon = 1
+
+array insert at bottom characters()
+defender = 1
+characters(defender).health = 100
+characters(defender).armor = 1
+
+#INCLUDE "dmgCalc.dba"
+gosub DamageCalculator_Init
+
+dmgCalc_getAttackDamage(attacker, defender, 0, "primary")
+
+print damageResult.debugTxt
+print "Dealt:"
+print str$(damageResult.damage) + " Damage"
+print str$(damageResult.conDamage) + " Damage to armor condition"
+print "Required time to recover: " + str$(damageResult.recoveryTime) + "ms"
+sync
+sync
+
+wait key
+
+end
